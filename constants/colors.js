@@ -2,7 +2,7 @@ const Colors = {
   light: {
     primary: '#6200EE',
     secondary: '#03DAC6',
-    accent: '#FF4081',
+    accent: '#c0c0c0',
     background: '#FFFFFF',
     surface: '#F5F5F5',
     error: '#B00020',
