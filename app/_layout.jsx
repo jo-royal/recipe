@@ -1,13 +1,13 @@
+import { Stack } from 'expo-router';
 import '../global.css';
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
 
 
-const _layout = () => {
+const RootLayout = () => {
     return (
-        <View className="flex-1 items-center justify-center">
-            <Text className="font-black">Hello World</Text>
-        </View>
+        <Stack />
+
     )
 }
 
-export default _layout
+export default RootLayout
