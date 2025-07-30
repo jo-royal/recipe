@@ -1,0 +1,22 @@
+const Colors = {
+  light: {
+    primary: '#6200EE',
+    secondary: '#03DAC6',
+    accent: '#FF4081',
+    background: '#FFFFFF',
+    surface: '#F5F5F5',
+    error: '#B00020',
+    text: '#1E1E1E',
+  },
+  dark: {
+    primary: '#BB86FC',
+    secondary: '#03DAC6',
+    accent: '#FF4081',
+    background: '#121212',
+    surface: '#1E1E1E',
+    error: '#CF6679',
+    text: '#E0E0E0',
+  },
+};
+
+export default Colors;
