@@ -10,6 +10,7 @@ const RootLayout = () => {
                 name="index"
                 options={{
                     headerShown: false,
+                    title: 'Home'
                 }} />
             <Stack.Screen
                 name="details"
