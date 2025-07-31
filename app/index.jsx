@@ -1,5 +1,5 @@
 import { Link } from 'expo-router'
-import { View, Image, Text, useColorScheme, SafeAreaView } from 'react-native'
+import { View, Image, Text, useColorScheme, SafeAreaView, ScrollView } from 'react-native'
 import Colors from '../constants/colors';
 import avater from '../assets/avater.jpg';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -27,8 +27,17 @@ const Index = () => {
             </View>
 
             <View className="mt-5 px-5">
-                <View className="rounded-xl h-[100px] w-full" style={{ backgroundColor: theme.primary }}></View>
+                <View className="rounded-xl h-[100px] w-full p-5 flex-row gap-3 items-center" style={{ backgroundColor: theme.primary }}>
+                    <Ionicons className="p-4 bg-white rounded-full h-full w-auto" name="bag-handle-sharp" size={33} color={theme.primary} />
+                    <View>
+                        <Text className="text-white text-[1.4rem]">Get 20% off Premium</Text>
+                        <Text className="text-white text-[1.4rem]">Subscription</Text>
+                    </View>
+                    <Text className="bg-white px-4 py-2.5 rounded-2xl ml-3 font-medium" style={{ color: theme.primary }}>Get Now</Text>
+                </View>
             </View>
+
+            <ScrollView></ScrollView>
 
         </SafeAreaView>
     )
