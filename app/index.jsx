@@ -1,5 +1,4 @@
-import { Link } from 'expo-router'
-import { View, Image, Text, useColorScheme, SafeAreaView, ScrollView } from 'react-native'
+import { View, Image, Text, useColorScheme, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native'
 import Colors from '../constants/colors';
 import avater from '../assets/avater.jpg';
 import breakfast from '../assets/breakfast-cat.png';
@@ -8,14 +7,40 @@ import chicken from '../assets/chicken-cat.png';
 import dessert from '../assets/dessert-cat.png';
 import all from '../assets/all-cat.png';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import apiService from '../services/api';
+import { useEffect, useState } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Index = () => {
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme || 'light'];
+    const safeArea = useSafeAreaInsets();
+
+    const [topMeals, setTopMeals] = useState([]);
+    const [moreMeals, setMoreMeals] = useState([]);
+
+    useEffect(() => {
+        getProducts();
+    }
+        , []);
+
+    const getProducts = async () => {
+        try {
+            const res = await apiService.getProducts();
+            const meals = res.data.meals || [];
+            // Take only first 10
+            const firstTen = meals.slice(0, 10);
+            setTopMeals(firstTen.slice(0, 5));
+            setMoreMeals(firstTen.slice(5, 10));
+
+        } catch (error) {
+            console.error("Error fetching products:", error);
+        }
+    }
 
 
     return (
-        <SafeAreaView className="h-full" style={{ backgroundColor: theme.background }}>
+        <ScrollView className="h-full" horizontal={false} showsVerticalScrollIndicator={false} style={{ backgroundColor: theme.background, paddingTop: safeArea.top, paddingBottom: safeArea.bottom }}>
             <View className="h-25 flex-row justify-between items-center px-5">
                 <View className="flex-row gap-3 items-center">
                     <Image className="h-16 w-16 rounded-full -ml-2" source={avater} />
@@ -34,7 +59,7 @@ const Index = () => {
             <View className="mt-5 px-5">
                 <View className="rounded-xl h-[100px] w-full p-5 flex-row gap-3 items-center" style={{ backgroundColor: theme.primary }}>
                     <Ionicons className="p-4 bg-white rounded-full h-full w-auto" name="bag-handle-sharp" size={33} color={theme.primary} />
-                    <View>
+                    <View className="flex-col gap-2">
                         <Text className="text-white text-[1.4rem]">Get 20% off Premium</Text>
                         <Text className="text-white text-[1.4rem]">Subscription</Text>
                     </View>
@@ -75,8 +100,35 @@ const Index = () => {
                 </View>
             </View>
 
-        </SafeAreaView>
-    )
-}
+            <View className="mt-10 px-5">
+                <Text className="font-semibold text-2xl">Top Picks</Text>
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="my-5">
+                    {topMeals.map((meal, index) => (
+                        <TouchableOpacity key={index} className="w-60 h-fit mr-3 rounded-xl overflow-hidden" style={{ backgroundColor: theme.surface }}>
+                            <Image className="w-full h-36 rounded-t-xl" source={{ uri: meal.strMealThumb }} />
+                            <Text className="text-lg font-semibold px-2 pt-2 w-full truncate" numberOfLines={1} style={{ color: theme.text }}>{meal.strMeal}</Text>
+                            <View className="flex-row justify-between p-2">
+                                <Text className="text-sm">By: Chef Ogba</Text>
+                                <Text className="font-medium" style={{ color: theme.primary }}>{"★".repeat(Math.floor(4.7))}{"☆".repeat(5 - Math.floor(4.7))} 4.7</Text>
+                            </View>
 
-export default Index
+                        </TouchableOpacity>
+                    ))}
+                </ScrollView>
+
+                <Text className="font-semibold text-2xl my-5">More Meals</Text>
+                {moreMeals.map((meal, index) => (
+                    <TouchableOpacity className="w-full h-[110px] flex-row justify-between pb-3 rounded-lg" key={index}  >
+                        <View className="h-full w-full flex-row gap-2" style={{ backgroundColor: theme.surface }}>
+                            <Image className="w-[120px] h-full rounded-lg" source={{ uri: meal.strMealThumb }} />
+                            <Text className="text-lg font-semibold mt-2 w-full truncate" numberOfLines={1} style={{ color: theme.text }}>{meal.strMeal}</Text>
+                        </View>
+                    </TouchableOpacity>
+                ))}
+
+            </View>
+        </ScrollView>
+    )
+};
+
+export default Index;
