@@ -70,31 +70,31 @@ const Index = () => {
             <Text className="font-semibold text-2xl p-5 mt-2">Categories</Text>
             <View className="px-5 w-full flex-row justify-between items-center">
                 <View className="flex-col gap-3 items-center">
-                    <View className="p-5 w-fit h-fit rounded-full bg-gray-200">
+                    <View className="p-5 w-fit h-fit rounded-full" style={{ backgroundColor: theme.surface }}>
                         <Image className="w-10 h-10 rounded-full" source={breakfast}></Image>
                     </View>
                     <Text className="font-semibold">Breakfast</Text>
                 </View>
                 <View className="flex-col gap-3 items-center">
-                    <View className="p-5 w-fit h-fit rounded-full bg-gray-200">
+                    <View className="p-5 w-fit h-fit rounded-full bg-gray-200" style={{ backgroundColor: theme.surface }}>
                         <Image className="w-10 h-10 rounded-full" source={beef}></Image>
                     </View>
                     <Text className="font-semibold">Beef</Text>
                 </View>
                 <View className="flex-col gap-3 items-center">
-                    <View className="p-5 w-fit h-fit rounded-full bg-gray-200">
+                    <View className="p-5 w-fit h-fit rounded-full bg-gray-200" style={{ backgroundColor: theme.surface }}>
                         <Image className="w-10 h-10 rounded-full" source={chicken}></Image>
                     </View>
                     <Text className="font-semibold">Chicken</Text>
                 </View>
                 <View className="flex-col gap-3 items-center">
-                    <View className="p-5 w-fit h-fit rounded-full bg-gray-200">
+                    <View className="p-5 w-fit h-fit rounded-full bg-gray-200" style={{ backgroundColor: theme.surface }}>
                         <Image className="w-10 h-10 rounded-full" source={dessert}></Image>
                     </View>
                     <Text className="font-semibold">Dessert</Text>
                 </View>
                 <View className="flex-col gap-3 items-center">
-                    <View className="p-5 w-fit h-fit rounded-full bg-gray-200">
+                    <View className="p-5 w-fit h-fit rounded-full bg-gray-200" style={{ backgroundColor: theme.surface }}>
                         <Image className="w-10 h-10 rounded-full" source={all}></Image>
                     </View>
                     <Text className="font-semibold">All</Text>
@@ -138,7 +138,7 @@ const Index = () => {
                                 </View>
                             </View>
                         </View>
-                        <Ionicons className="p-2" name="heart-outline" size={30} style={{ color: "red" }} />
+                        <Ionicons className="p-2 -ml-3" name="heart-outline" size={30} style={{ color: "red" }} />
                     </TouchableOpacity>
                 ))}
 
