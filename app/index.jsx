@@ -1,4 +1,4 @@
-import { View, Image, Text, useColorScheme, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Image, Text, useColorScheme, ScrollView, TouchableOpacity } from 'react-native'
 import Colors from '../constants/colors';
 import avater from '../assets/avater.jpg';
 import breakfast from '../assets/breakfast-cat.png';
@@ -67,7 +67,8 @@ const Index = () => {
                 </View>
             </View>
 
-            <View className="mt-5 px-5 w-full flex-row justify-between items-center">
+            <Text className="font-semibold text-2xl p-5 mt-2">Categories</Text>
+            <View className="px-5 w-full flex-row justify-between items-center">
                 <View className="flex-col gap-3 items-center">
                     <View className="p-5 w-fit h-fit rounded-full bg-gray-200">
                         <Image className="w-10 h-10 rounded-full" source={breakfast}></Image>
@@ -104,25 +105,40 @@ const Index = () => {
                 <Text className="font-semibold text-2xl">Top Picks</Text>
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="my-5">
                     {topMeals.map((meal, index) => (
-                        <TouchableOpacity key={index} className="w-60 h-fit mr-3 rounded-xl overflow-hidden" style={{ backgroundColor: theme.surface }}>
+                        <TouchableOpacity key={index} className="w-[230px] h-fit mr-3 rounded-xl overflow-hidden relative" style={{ backgroundColor: theme.surface }}>
                             <Image className="w-full h-36 rounded-t-xl" source={{ uri: meal.strMealThumb }} />
+                            <Ionicons className="absolute top-0 left-0 p-2 bg-white/40 rounded-full " name="heart-outline" size={30} style={{ color: "red" }} />
                             <Text className="text-lg font-semibold px-2 pt-2 w-full truncate" numberOfLines={1} style={{ color: theme.text }}>{meal.strMeal}</Text>
+                            <View className="flex-row gap-5 px-2 py-1">
+                                <Ionicons className="" style={{ color: "green" }} name='bar-chart-outline' size={15}> <Text className="text-sm" style={{ color: theme.text }}> Easy</Text></Ionicons>
+                                <Ionicons className="" style={{ color: "green" }} name='time-outline' size={16}> <Text className="text-sm" style={{ color: theme.text }}> 15min</Text></Ionicons>
+                            </View>
                             <View className="flex-row justify-between p-2">
                                 <Text className="text-sm">By: Chef Ogba</Text>
                                 <Text className="font-medium" style={{ color: theme.primary }}>{"★".repeat(Math.floor(4.7))}{"☆".repeat(5 - Math.floor(4.7))} 4.7</Text>
                             </View>
-
                         </TouchableOpacity>
                     ))}
                 </ScrollView>
 
                 <Text className="font-semibold text-2xl my-5">More Meals</Text>
                 {moreMeals.map((meal, index) => (
-                    <TouchableOpacity className="w-full h-[110px] flex-row justify-between pb-3 rounded-lg" key={index}  >
-                        <View className="h-full w-full flex-row gap-2" style={{ backgroundColor: theme.surface }}>
+                    <TouchableOpacity className="w-full h-[100px] flex-row justify-between mb-3 rounded-lg" key={index} style={{ backgroundColor: theme.surface }} >
+                        <View className="h-full w-[90%] flex-row gap-2">
                             <Image className="w-[120px] h-full rounded-lg" source={{ uri: meal.strMealThumb }} />
-                            <Text className="text-lg font-semibold mt-2 w-full truncate" numberOfLines={1} style={{ color: theme.text }}>{meal.strMeal}</Text>
+                            <View className="flex-col justify-between">
+                                <Text className="text-lg font-semibold mt-2 w-full truncate" numberOfLines={1} >{meal.strMeal}</Text>
+                                <View className="flex-row gap-5">
+                                    <Ionicons className="" style={{ color: "green" }} name='bar-chart-outline' size={15}> <Text className="text-sm" style={{ color: theme.text }}> Easy</Text></Ionicons>
+                                    <Ionicons className="" style={{ color: "green" }} name='time-outline' size={15}> <Text className="text-sm" style={{ color: theme.text }}> 15min</Text></Ionicons>
+                                </View>
+                                <View className="flex-row gap-8 p-2">
+                                    <Text className="text-sm">By: Chef Ogba</Text>
+                                    <Text className="font-medium" style={{ color: theme.primary }}>{"★"} 4.7</Text>
+                                </View>
+                            </View>
                         </View>
+                        <Ionicons className="p-2" name="heart-outline" size={30} style={{ color: "red" }} />
                     </TouchableOpacity>
                 ))}
 
