@@ -10,6 +10,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import apiService from '../services/api';
 import { useEffect, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+
 
 const Index = () => {
     const colorScheme = useColorScheme();
@@ -18,6 +20,8 @@ const Index = () => {
 
     const [topMeals, setTopMeals] = useState([]);
     const [moreMeals, setMoreMeals] = useState([]);
+
+    const router = useRouter();
 
     useEffect(() => {
         getProducts();
@@ -105,7 +109,7 @@ const Index = () => {
                 <Text className="font-semibold text-2xl">Top Picks</Text>
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="my-5">
                     {topMeals.map((meal, index) => (
-                        <TouchableOpacity key={index} className="w-[230px] h-fit mr-3 rounded-xl overflow-hidden relative" style={{ backgroundColor: theme.surface }}>
+                        <TouchableOpacity className="w-[230px] h-fit mr-3 rounded-xl overflow-hidden relative" key={index} onPress={() => router.push(`/${meal.idMeal}`)} style={{ backgroundColor: theme.surface }}>
                             <Image className="w-full h-36 rounded-t-xl" source={{ uri: meal.strMealThumb }} />
                             <Ionicons className="absolute top-0 left-0 p-2 bg-white/40 rounded-full " name="heart-outline" size={30} style={{ color: "red" }} />
                             <Text className="text-lg font-semibold px-2 pt-2 w-full truncate" numberOfLines={1} style={{ color: theme.text }}>{meal.strMeal}</Text>
@@ -123,7 +127,7 @@ const Index = () => {
 
                 <Text className="font-semibold text-2xl my-5">More Meals</Text>
                 {moreMeals.map((meal, index) => (
-                    <TouchableOpacity className="w-full h-[100px] flex-row justify-between mb-3 rounded-lg" key={index} style={{ backgroundColor: theme.surface }} >
+                    <TouchableOpacity className="w-full h-[100px] flex-row justify-between mb-3 rounded-lg" key={index} onPress={() => router.push(`/${meal.idMeal}`)} style={{ backgroundColor: theme.surface }} >
                         <View className="h-full w-[90%] flex-row gap-2">
                             <Image className="w-[120px] h-full rounded-lg" source={{ uri: meal.strMealThumb }} />
                             <View className="flex-col justify-between">

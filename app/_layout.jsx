@@ -42,6 +42,9 @@ const RootLayout = () => {
                     />
                 )
             }} />
+            <Tabs.Screen name="[meal_id]" options={{
+                title: 'Meal Details'
+            }} />
         </Tabs>
 
     )
