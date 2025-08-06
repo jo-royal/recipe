@@ -12,7 +12,7 @@ const RootLayout = () => {
     return (
         <Tabs screenOptions={{
             headerStyle: {
-                backgroundColor: '#f4511e',
+                backgroundColor: theme.primary,
             },
             headerTintColor: '#fff',
             headerTitleStyle: {

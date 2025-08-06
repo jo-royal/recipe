@@ -9,20 +9,20 @@ const MealDetail = () => {
 
     const [meal, setMeal] = useState("")
 
-
     const { meal_id } = useLocalSearchParams();
 
     const getProduct = async (id = meal_id) => {
         try {
             const res = await apiService.getProduct(id);
-            console.log(JSON.stringify(res.data, null, 2))
             setMeal(res.data?.meals[0])
         } catch (error) {
             console.error("Error fetching product:", error);
         }
     }
 
+
     useEffect(() => {
+        setMeal("")
         getProduct();
     }, [meal_id]);
 
@@ -40,17 +40,15 @@ const MealDetail = () => {
         return items;
     };
 
-    if (!meal) {
-        return <Text style={styles.loading}>Loading meal details...</Text>;
-    }
-
 
 
     const videoId = meal.strYoutube?.split('v=')[1];
     // Construct the embed URL
     const embedUrl = `https://www.youtube.com/embed/${videoId}`;
 
-
+    if (!meal) {
+        return <Text style={styles.loading}>Loading meal details...</Text>;
+    }
 
     return (
         <ScrollView contentContainerStyle={styles.container}>

@@ -1,4 +1,4 @@
-import { View, Image, Text, useColorScheme, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Image, Text, useColorScheme, ScrollView, TouchableOpacity, FlatList } from 'react-native'
 import Colors from '../constants/colors';
 import avater from '../assets/avater.jpg';
 import breakfast from '../assets/breakfast-cat.png';
@@ -14,23 +14,32 @@ import { useRouter } from 'expo-router';
 
 
 const Index = () => {
+
+    const categories = [
+        { img: breakfast, name: "Breakfast" },
+        { img: beef, name: "Beef" },
+        { img: chicken, name: "Chicken" },
+        { img: dessert, name: "Dessert" }
+    ];
+
+
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme || 'light'];
     const safeArea = useSafeAreaInsets();
 
     const [topMeals, setTopMeals] = useState([]);
     const [moreMeals, setMoreMeals] = useState([]);
+    const [cat, setCat] = useState("");
+    const [catList, setCatList] = useState([]);
+    const [catListToggle, setCatListToggle] = useState(false);
 
     const router = useRouter();
 
-    useEffect(() => {
-        getProducts();
-    }
-        , []);
 
-    const getProducts = async () => {
+
+    const getProducts = async (categorie = cat) => {
         try {
-            const res = await apiService.getProducts();
+            const res = await apiService.getProducts(categorie);
             const meals = res.data.meals || [];
             // Take only first 10
             const firstTen = meals.slice(0, 10);
@@ -42,112 +51,156 @@ const Index = () => {
         }
     }
 
+    useEffect(() => {
+        setTopMeals([])
+        setCatListToggle(false)
+        getProducts(cat);
+    }, [cat]);
+
+
+
+    const handleAllCategories = async () => {
+        try {
+            const res = await apiService.getCategories()
+            setCatList(res.data.categories)
+            setCatListToggle(true)
+        } catch (error) {
+            console.error("error at category list", error)
+        }
+
+    }
 
     return (
-        <ScrollView className="h-full" horizontal={false} showsVerticalScrollIndicator={false} style={{ backgroundColor: theme.background, paddingTop: safeArea.top, paddingBottom: safeArea.bottom }}>
-            <View className="h-25 flex-row justify-between items-center px-5">
-                <View className="flex-row gap-3 items-center">
-                    <Image className="h-16 w-16 rounded-full -ml-2" source={avater} />
-                    <View className="">
-                        <Text className="" style={{ color: theme.text }}>Welcome Back!</Text>
-                        <Text className="text-xl font-semibold">Cristina Kiehn</Text>
-                    </View>
-                </View>
-
-                <View className="flex-row gap-4">
-                    <Ionicons className="p-1.5 rounded-full border" style={{ borderColor: theme.accent }} name="search-outline" size={22} color={theme.text} />
-                    <Ionicons className="p-1.5 rounded-full border" style={{ borderColor: theme.accent }} name="notifications-outline" size={22} color={theme.text} />
-                </View>
-            </View>
-
-            <View className="mt-5 px-5">
-                <View className="rounded-xl h-[100px] w-full p-5 flex-row gap-3 items-center" style={{ backgroundColor: theme.primary }}>
-                    <Ionicons className="p-4 bg-white rounded-full h-full w-auto" name="bag-handle-sharp" size={33} color={theme.primary} />
-                    <View className="flex-col gap-2">
-                        <Text className="text-white text-[1.4rem]">Get 20% off Premium</Text>
-                        <Text className="text-white text-[1.4rem]">Subscription</Text>
-                    </View>
-                    <Text className="bg-white px-4 py-2.5 rounded-2xl ml-3 font-medium" style={{ color: theme.primary }}>Get Now</Text>
-                </View>
-            </View>
-
-            <Text className="font-semibold text-2xl p-5 mt-2">Categories</Text>
-            <View className="px-5 w-full flex-row justify-between items-center">
-                <View className="flex-col gap-3 items-center">
-                    <View className="p-5 w-fit h-fit rounded-full" style={{ backgroundColor: theme.surface }}>
-                        <Image className="w-10 h-10 rounded-full" source={breakfast}></Image>
-                    </View>
-                    <Text className="font-semibold">Breakfast</Text>
-                </View>
-                <View className="flex-col gap-3 items-center">
-                    <View className="p-5 w-fit h-fit rounded-full bg-gray-200" style={{ backgroundColor: theme.surface }}>
-                        <Image className="w-10 h-10 rounded-full" source={beef}></Image>
-                    </View>
-                    <Text className="font-semibold">Beef</Text>
-                </View>
-                <View className="flex-col gap-3 items-center">
-                    <View className="p-5 w-fit h-fit rounded-full bg-gray-200" style={{ backgroundColor: theme.surface }}>
-                        <Image className="w-10 h-10 rounded-full" source={chicken}></Image>
-                    </View>
-                    <Text className="font-semibold">Chicken</Text>
-                </View>
-                <View className="flex-col gap-3 items-center">
-                    <View className="p-5 w-fit h-fit rounded-full bg-gray-200" style={{ backgroundColor: theme.surface }}>
-                        <Image className="w-10 h-10 rounded-full" source={dessert}></Image>
-                    </View>
-                    <Text className="font-semibold">Dessert</Text>
-                </View>
-                <View className="flex-col gap-3 items-center">
-                    <View className="p-5 w-fit h-fit rounded-full bg-gray-200" style={{ backgroundColor: theme.surface }}>
-                        <Image className="w-10 h-10 rounded-full" source={all}></Image>
-                    </View>
-                    <Text className="font-semibold">All</Text>
-                </View>
-            </View>
-
-            <View className="mt-10 px-5">
-                <Text className="font-semibold text-2xl">Top Picks</Text>
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="my-5">
-                    {topMeals.map((meal, index) => (
-                        <TouchableOpacity className="w-[230px] h-fit mr-3 rounded-xl overflow-hidden relative" key={index} onPress={() => router.push(`/${meal.idMeal}`)} style={{ backgroundColor: theme.surface }}>
-                            <Image className="w-full h-36 rounded-t-xl" source={{ uri: meal.strMealThumb }} />
-                            <Ionicons className="absolute top-0 left-0 p-2 bg-white/40 rounded-full " name="heart-outline" size={30} style={{ color: "red" }} />
-                            <Text className="text-lg font-semibold px-2 pt-2 w-full truncate" numberOfLines={1} style={{ color: theme.text }}>{meal.strMeal}</Text>
-                            <View className="flex-row gap-5 px-2 py-1">
-                                <Ionicons className="" style={{ color: "green" }} name='bar-chart-outline' size={15}> <Text className="text-sm" style={{ color: theme.text }}> Easy</Text></Ionicons>
-                                <Ionicons className="" style={{ color: "green" }} name='time-outline' size={16}> <Text className="text-sm" style={{ color: theme.text }}> 15min</Text></Ionicons>
-                            </View>
-                            <View className="flex-row justify-between p-2">
-                                <Text className="text-sm">By: Chef Ogba</Text>
-                                <Text className="font-medium" style={{ color: theme.primary }}>{"★".repeat(Math.floor(4.7))}{"☆".repeat(5 - Math.floor(4.7))} 4.7</Text>
-                            </View>
-                        </TouchableOpacity>
-                    ))}
-                </ScrollView>
-
-                <Text className="font-semibold text-2xl my-5">More Meals</Text>
-                {moreMeals.map((meal, index) => (
-                    <TouchableOpacity className="w-full h-[100px] flex-row justify-between mb-3 rounded-lg" key={index} onPress={() => router.push(`/${meal.idMeal}`)} style={{ backgroundColor: theme.surface }} >
-                        <View className="h-full w-[90%] flex-row gap-2">
-                            <Image className="w-[120px] h-full rounded-lg" source={{ uri: meal.strMealThumb }} />
-                            <View className="flex-col justify-between">
-                                <Text className="text-lg font-semibold mt-2 w-full truncate" numberOfLines={1} >{meal.strMeal}</Text>
-                                <View className="flex-row gap-5">
-                                    <Ionicons className="" style={{ color: "green" }} name='bar-chart-outline' size={15}> <Text className="text-sm" style={{ color: theme.text }}> Easy</Text></Ionicons>
-                                    <Ionicons className="" style={{ color: "green" }} name='time-outline' size={15}> <Text className="text-sm" style={{ color: theme.text }}> 15min</Text></Ionicons>
-                                </View>
-                                <View className="flex-row gap-8 p-2">
-                                    <Text className="text-sm">By: Chef Ogba</Text>
-                                    <Text className="font-medium" style={{ color: theme.primary }}>{"★"} 4.7</Text>
-                                </View>
+        <>
+            {topMeals.length > 0 &&
+                <ScrollView className="h-full" horizontal={false} showsVerticalScrollIndicator={false} style={{ backgroundColor: theme.background, paddingTop: safeArea.top, paddingBottom: safeArea.bottom }}>
+                    <View className="h-25 flex-row justify-between items-center px-5">
+                        <View className="flex-row gap-3 items-center">
+                            <Image className="h-16 w-16 rounded-full -ml-2" source={avater} />
+                            <View className="">
+                                <Text className="" style={{ color: theme.text }}>Welcome Back!</Text>
+                                <Text className="text-xl font-semibold">Cristina Kiehn</Text>
                             </View>
                         </View>
-                        <Ionicons className="p-2 -ml-3" name="heart-outline" size={30} style={{ color: "red" }} />
-                    </TouchableOpacity>
-                ))}
 
-            </View>
-        </ScrollView>
+                        <View className="flex-row gap-4">
+                            <Ionicons className="p-1.5 rounded-full border" style={{ borderColor: theme.accent }} name="search-outline" size={22} color={theme.text} />
+                            <Ionicons className="p-1.5 rounded-full border" style={{ borderColor: theme.accent }} name="notifications-outline" size={22} color={theme.text} />
+                        </View>
+                    </View>
+
+                    <View className="mt-5 px-5">
+                        <View className="rounded-xl h-[100px] w-full p-5 flex-row gap-3 items-center" style={{ backgroundColor: theme.primary }}>
+                            <Ionicons className="p-4 bg-white rounded-full h-full w-auto" name="bag-handle-sharp" size={33} color={theme.primary} />
+                            <View className="flex-col gap-2">
+                                <Text className="text-white text-[1.4rem]">Get 20% off Premium</Text>
+                                <Text className="text-white text-[1.4rem]">Subscription</Text>
+                            </View>
+                            <Text className="bg-white px-4 py-2.5 rounded-2xl ml-3 font-medium" style={{ color: theme.primary }}>Get Now</Text>
+                        </View>
+                    </View>
+
+                    <Text className="font-semibold text-2xl p-5 mt-2">Categories</Text>
+
+                    <View className="px-5 w-full flex-row justify-between items-center">
+                        <>
+                            {categories.map((category, index) => (
+                                <TouchableOpacity className="flex-col gap-3 items-center" key={index} onPress={() => setCat(category.name)}>
+                                    <View className="p-5 w-fit h-fit rounded-full" style={{ backgroundColor: theme.surface }}>
+                                        <Image className="w-10 h-10 rounded-full" source={category.img}></Image>
+                                    </View>
+                                    <Text className="font-semibold">{category.name}</Text>
+                                </TouchableOpacity>
+                            ))}
+                            <TouchableOpacity className="flex-col gap-3 items-center" onPress={() => handleAllCategories()}>
+                                <View className="p-5 w-fit h-fit rounded-full bg-gray-200" style={{ backgroundColor: theme.surface }}>
+                                    <Image className="w-10 h-10 rounded-full" source={all}></Image>
+                                </View>
+                                <Text className="font-semibold">All</Text>
+                            </TouchableOpacity>
+                        </>
+                    </View>
+
+                    <View className="mt-10 px-5">
+                        <Text className="font-semibold text-2xl">{cat} Top Picks</Text>
+                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="my-5">
+                            {topMeals.map((meal, index) => (
+                                <TouchableOpacity className="w-[230px] h-fit mr-3 rounded-xl overflow-hidden relative" key={index} onPress={() => router.push(`/${meal.idMeal}`)} style={{ backgroundColor: theme.surface }}>
+                                    <Image className="w-full h-36 rounded-t-xl" source={{ uri: meal.strMealThumb }} />
+                                    <Ionicons className="absolute top-0 left-0 p-2 bg-white/40 rounded-full " name="heart-outline" size={30} style={{ color: "red" }} />
+                                    <Text className="text-lg font-semibold px-2 pt-2 w-full truncate" numberOfLines={1} style={{ color: theme.text }}>{meal.strMeal}</Text>
+                                    <View className="flex-row gap-5 px-2 py-1">
+                                        <Ionicons className="" style={{ color: "green" }} name='bar-chart-outline' size={15}> <Text className="text-sm" style={{ color: theme.text }}> Easy</Text></Ionicons>
+                                        <Ionicons className="" style={{ color: "green" }} name='time-outline' size={16}> <Text className="text-sm" style={{ color: theme.text }}> 15min</Text></Ionicons>
+                                    </View>
+                                    <View className="flex-row justify-between p-2">
+                                        <Text className="text-sm">By: Chef Ogba</Text>
+                                        <Text className="font-medium" style={{ color: theme.primary }}>{"★".repeat(Math.floor(4.7))}{"☆".repeat(5 - Math.floor(4.7))} 4.7</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            ))}
+                        </ScrollView>
+
+                        <Text className="font-semibold text-2xl my-5">More {cat}</Text>
+                        {moreMeals.map((meal, index) => (
+                            <TouchableOpacity className="w-full h-[100px] flex-row justify-between mb-3 rounded-lg" key={index} onPress={() => router.push(`/${meal.idMeal}`)} style={{ backgroundColor: theme.surface }} >
+                                <View className="h-full w-[90%] flex-row gap-2">
+                                    <Image className="w-[120px] h-full rounded-lg" source={{ uri: meal.strMealThumb }} />
+                                    <View className="flex-col justify-between">
+                                        <Text className="text-lg font-semibold mt-2 w-full truncate" numberOfLines={1} >{meal.strMeal}</Text>
+                                        <View className="flex-row gap-5">
+                                            <Ionicons className="" style={{ color: "green" }} name='bar-chart-outline' size={15}> <Text className="text-sm" style={{ color: theme.text }}> Easy</Text></Ionicons>
+                                            <Ionicons className="" style={{ color: "green" }} name='time-outline' size={15}> <Text className="text-sm" style={{ color: theme.text }}> 15min</Text></Ionicons>
+                                        </View>
+                                        <View className="flex-row gap-8 p-2">
+                                            <Text className="text-sm">By: Chef Ogba</Text>
+                                            <Text className="font-medium" style={{ color: theme.primary }}>{"★"} 4.7</Text>
+                                        </View>
+                                    </View>
+                                </View>
+                                <Ionicons className="p-2 -ml-3" name="heart-outline" size={30} style={{ color: "red" }} />
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                </ScrollView >
+            }
+            {topMeals <= 0 &&
+                <View className="h-screen w-screen" style={{ backgroundColor: theme.secondary, paddingTop: safeArea.top, paddingBottom: safeArea.bottom }}>
+                    <Text className="p-5 text-2xl text-center m-auto" >Loading meal details...</Text>
+                </View>
+            }
+
+            {catListToggle &&
+                <View className="w-full z-50 p-5 m-auto fixed bottom-0 rounded-t-lg bg-red-300">
+                    <TouchableOpacity className="w-full p-5" onPress={() => setCatListToggle(false)}>
+                        <Text className="text-right text-xl font-semibold">X</Text>
+                    </TouchableOpacity>
+                    <FlatList
+                        data={catList}
+                        keyExtractor={(item, index) => index.toString()}
+                        numColumns={2}
+                        contentContainerStyle={{ gap: 10, padding: 10 }}
+                        columnWrapperStyle={{ justifyContent: 'space-between', gap: 10 }}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                onPress={() => setCat(item.strCategory)}
+                                style={{
+                                    flex: 1,
+                                    marginBottom: 10,
+                                    backgroundColor: '#eee',
+                                    padding: 10,
+                                    borderRadius: 8,
+                                }}
+                            >
+                                <Text style={{ textAlign: 'center' }}>{item.strCategory}</Text>
+                            </TouchableOpacity>
+                        )}
+                    />
+
+                </View>
+            }
+
+        </>
     )
 };
 
