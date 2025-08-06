@@ -14,9 +14,15 @@ const getProducts = async () => {
   return response;
 };
 
+const getProduct = async (id) => {
+  const response = await api.get(`/api/json/v1/1/lookup.php?i=${id}`);
+  return response;
+};
+
 
 const apiService = {
   getProducts,
+  getProduct,
 };
 
 export default apiService;
