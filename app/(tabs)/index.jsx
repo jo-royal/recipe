@@ -1,13 +1,13 @@
 import { View, Image, Text, useColorScheme, ScrollView, TouchableOpacity, FlatList } from 'react-native'
-import Colors from '../constants/colors';
-import avater from '../assets/avater.jpg';
-import breakfast from '../assets/breakfast-cat.png';
-import beef from '../assets/beef-cat.png';
-import chicken from '../assets/chicken-cat.png';
-import dessert from '../assets/dessert-cat.png';
-import all from '../assets/all-cat.png';
+import Colors from '../../constants/colors';
+import avater from '../../assets/avater.jpg';
+import breakfast from '../../assets/breakfast-cat.png';
+import beef from '../../assets/beef-cat.png';
+import chicken from '../../assets/chicken-cat.png';
+import dessert from '../../assets/dessert-cat.png';
+import all from '../../assets/all-cat.png';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import apiService from '../services/api';
+import apiService from '../../services/api';
 import { useEffect, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -171,7 +171,7 @@ const Index = () => {
             }
 
             {catListToggle &&
-                <View className="w-full z-50 p-5 m-auto fixed bottom-0 rounded-t-lg bg-red-300">
+                <View className="z-50 p-5 m-auto fixed bottom-0 rounded-t-lg mx-1" style={{ backgroundColor: theme.accent }}>
                     <TouchableOpacity className="w-full p-5" onPress={() => setCatListToggle(false)}>
                         <Text className="text-right text-xl font-semibold">X</Text>
                     </TouchableOpacity>
@@ -187,20 +187,21 @@ const Index = () => {
                                 style={{
                                     flex: 1,
                                     marginBottom: 10,
-                                    backgroundColor: '#eee',
-                                    padding: 10,
-                                    borderRadius: 8,
+                                    backgroundColor: 'white',
+                                    padding: 15,
+                                    borderRadius: 5,
                                 }}
                             >
-                                <Text style={{ textAlign: 'center' }}>{item.strCategory}</Text>
+                                <Text className="font-semibold" style={{ textAlign: 'center' }}>{item.strCategory}</Text>
                             </TouchableOpacity>
                         )}
                     />
-
                 </View>
+
             }
 
         </>
+
     )
 };
 
