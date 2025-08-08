@@ -27,11 +27,17 @@ const getCategories = async (id) => {
   return response;
 };
 
+const getSearch = async (query) => {
+  const response = await api.get(`https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`);
+  return response;
+};
+
 
 const apiService = {
   getProducts,
   getProduct,
   getCategories,
+  getSearch,
 };
 
 export default apiService;

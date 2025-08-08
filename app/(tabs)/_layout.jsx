@@ -25,9 +25,9 @@ const TabLayout = () => {
             <Tabs.Screen
                 name="details"
                 options={{
-                    title: 'Details',
+                    title: 'Search',
                     tabBarIcon: ({ focused, color }) => (
-                        <Ionicons name={focused ? 'apps' : 'apps-outline'} size={24} color={color} />
+                        <Ionicons name={focused ? 'search' : 'search-outline'} size={24} color={color} />
                     ),
                 }}
             />

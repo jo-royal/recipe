@@ -1,8 +1,8 @@
 const Colors = {
   light: {
     primary: '#f4511e',
-    secondary: '#03DAC6',
-    accent: 'gray',
+    secondary: 'orange',
+    accent: '6E7582',
     background: '#F6F8FE',
     surface: '#FFFFFF',
     error: '#B00020',
